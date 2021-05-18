@@ -8,6 +8,21 @@
     <p v-if="show">bye</p>
   </transition>
   </div>
+  <br><br>
+  <transition
+    :css="false"
+    @before-enter="beforeEnter"
+    @enter="enter"
+    @after-enter="afterEnter"
+    @enter-cancelled="enterCancelled"
+    
+    @before-leave="beforeLeave"
+    @leave="leave"
+    @after-leave="afterLeave"
+    @leave-cancelled="leaveCancelled"
+  >
+    <div class="circle" v-if="show"></div>
+  </transition>
   <LikeHeader>
     <template v-slot:title>
       <p>よろしく</p>
@@ -83,12 +98,65 @@ export default {
   methods: {
     incrementNumber(value){
       this.number = value
-    }
+    },
+    beforeEnter(el) {
+      // 現れる前
+      el.style.transform = 'scale(0)';
+    },
+    enter(el, done) {
+      // 現れる時
+      let scale = 0;
+      const interval = setInterval(() => {
+        el.style.transform = 'scale(${scale})';
+        scale += 0.1;
+        if ( scale > 1) {
+          clearInterval(interval);
+          done();
+        }
+      }, 200);
+    },
+    /*
+    afterEnter(el) {
+      // 現れた後
+    },
+    enterCancelled(el) {
+      // 現れるアニメーションがキャンセルされた時
+    },
+    
+    beforeLeave(el) {
+      // 消える前
+    },*/
+    leave(el, done) {
+      // 消える時
+      let scale = 1;
+      const interval = setInterval(() => {
+        el.style.transform = 'scale(${scale})';
+        scale -= 0.1;
+        if ( scale < 0) {
+          clearInterval(interval);
+          done();
+        }
+      }, 200);
+    },
+    /*
+    afterLeave(el) {
+      // 消えた後
+    },
+    leaveCancelled(el) {
+      // 消えるアニメーションがキャンセルされた時
+    },*/
   }
 }
 </script>
 
 <style scoped>
+.circle {
+  width: 200px;
+  height: 200px;
+  margin: auto;
+  border-radius: 100px;
+  background-color: deeppink;
+}
 .fade-enter-from{
   /* 現れる時の最初の状態 */
   opacity: 0;
