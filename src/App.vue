@@ -8,6 +8,7 @@
     <p v-if="show">bye</p>
   </transition>
   </div>
+  <p></p>
   <br><br>
   <transition
     :css="false"
